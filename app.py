@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, flash
 from werkzeug.exceptions import abort
 
 app = Flask(__name__)
@@ -19,6 +19,13 @@ def get_post(post_id):
     if post is None:
         abort(404)
     return post
+
+
+def get_posts():
+    conn = get_db_connection()
+    posts = conn.execute('SELECT * FROM posts').fetchall()
+    conn.close()
+    return posts
 
 
 @app.route('/')
@@ -45,9 +52,35 @@ def signup():
     return render_template('signup.html')
 
 
+@app.route('/signup', methods=['POST'])
+def signup_post():
+    email = request.form.get('email')
+    name = request.form.get('name')
+    password = request.form.get('password')
+
+    if email == "milox@milox" and password == "milox":
+        return render_template('home.html', button_logout=True, posts=get_posts())
+    else:
+        #flash('Please check your login details and try again.')
+        return redirect(url_for('signup'))
+        #return "Wrong username or pass"
+
+
 @app.route('/signin')
 def signin():
     return render_template('signin.html')
+
+
+@app.route('/signin', methods=['POST'])
+def signin_post():
+    email = request.form.get('email')
+    name = request.form.get('name')
+    password = request.form.get('password')
+
+    if email == "milox@milox" and password == "milox":
+        return render_template('home.html', button_logout=True, posts=get_posts())
+    else:
+        return "Wrong username or pass"
 
 
 if __name__ == "__main__":

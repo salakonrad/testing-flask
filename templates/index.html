@@ -1,12 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to FlaskBlog {% endblock %}</h1>
-    {% for post in posts %}
-        <a href="{{ url_for('post', post_id=post['id']) }}">
-            <h2>{{ post['title'] }}</h2>
-        </a>
-        <span class="badge badge-primary">{{ post['created'] }}</span>
-        <hr>
-    {% endfor %}
+    <h3><span class="badge badge-success">Witaj w Systemie Kadrowym Milox!</span></h3>
+    <div class="alert alert-danger" role="alert">
+      Zaloguj się aby zobaczyc posty
+    </div>
 {% endblock %}
