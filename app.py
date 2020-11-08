@@ -31,29 +31,19 @@ def get_posts():
 
 def is_logged():
     if "user" in session:
-        user = session["user"]
+        # user = session["user"]
         return True
 
 
 @app.route('/')
 def index():
-    conn = get_db_connection()
-    posts = conn.execute('SELECT * FROM posts').fetchall()
-    conn.close()
-    return render_template('index.html', posts=posts, is_logged=is_logged())
-
-
-@app.route('/home')
-def home():
-    if "user" in session:
-        user = session["user"]
-        return render_template("home.html", display_user=user, is_logged=is_logged())
+    return render_template('index.html', posts=get_posts(), is_logged=is_logged())
 
 
 @app.route('/<int:post_id>')
 def post(post_id):
     post = get_post(post_id)
-    return render_template('post.html', post=post)
+    return render_template('post.html', post=post, is_logged=is_logged())
 
 
 @app.route('/about')
@@ -98,7 +88,7 @@ def signin_post():
     if request.method == "POST":
         user = request.form["email"]
         session["user"] = user
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
     else:
         return render_template("signin.html")
 
