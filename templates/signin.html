@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h2>Sign in</h2>
-  <form method="POST" action="/signin">
+    <h2>Sign in</h2>
+
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    <form method="POST" action="/signin">
       <div class="field">
           <div class="control">
               <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
@@ -16,5 +24,5 @@
       </div>
 
       <button class="button is-block is-info is-large is-fullwidth">Sign In</button>
-  </form>
+    </form>
 {% endblock %}

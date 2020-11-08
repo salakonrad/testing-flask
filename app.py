@@ -65,9 +65,8 @@ def signup_post():
     if email == "milox@milox" and password == "milox":
         return redirect(url_for('home'))
     else:
-        #flash('Please check your login details and try again.')
+        flash('Please check your login details and try again.')
         return redirect(url_for('signup'))
-        #return "Wrong username or pass"
 
 
 @app.route('/signin')
@@ -90,6 +89,7 @@ def signin_post():
         session["user"] = user
         return redirect(url_for('index'))
     else:
+        flash('Please check your login details and try again.')
         return render_template("signin.html")
 
 
