@@ -1,8 +1,9 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, session
 from werkzeug.exceptions import abort
 
 app = Flask(__name__)
+app.secret_key = 'home'
 
 
 def get_db_connection():
@@ -28,12 +29,25 @@ def get_posts():
     return posts
 
 
+def is_logged():
+    if "user" in session:
+        user = session["user"]
+        return True
+
+
 @app.route('/')
 def index():
     conn = get_db_connection()
     posts = conn.execute('SELECT * FROM posts').fetchall()
     conn.close()
-    return render_template('index.html', posts=posts)
+    return render_template('index.html', posts=posts, is_logged=is_logged())
+
+
+@app.route('/home')
+def home():
+    if "user" in session:
+        user = session["user"]
+        return render_template("home.html", display_user=user, is_logged=is_logged())
 
 
 @app.route('/<int:post_id>')
@@ -44,7 +58,7 @@ def post(post_id):
 
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', is_logged=is_logged())
 
 
 @app.route('/signup')
@@ -59,7 +73,7 @@ def signup_post():
     password = request.form.get('password')
 
     if email == "milox@milox" and password == "milox":
-        return render_template('home.html', button_logout=True, posts=get_posts())
+        return redirect(url_for('home'))
     else:
         #flash('Please check your login details and try again.')
         return redirect(url_for('signup'))
@@ -73,14 +87,26 @@ def signin():
 
 @app.route('/signin', methods=['POST'])
 def signin_post():
-    email = request.form.get('email')
-    name = request.form.get('name')
-    password = request.form.get('password')
-
-    if email == "milox@milox" and password == "milox":
-        return render_template('home.html', button_logout=True, posts=get_posts())
+    # email = request.form.get('email')
+    # name = request.form.get('name')
+    # password = request.form.get('password')
+    #
+    # if email == "milox@milox" and password == "milox":
+    #     return render_template('home.html', button_logout=True, posts=get_posts())
+    # else:
+    #     return "Wrong username or pass"
+    if request.method == "POST":
+        user = request.form["email"]
+        session["user"] = user
+        return redirect(url_for('home'))
     else:
-        return "Wrong username or pass"
+        return render_template("signin.html")
+
+
+@app.route('/logout')
+def logout():
+    session.pop("user", None)
+    return redirect(url_for('index'))
 
 
 if __name__ == "__main__":

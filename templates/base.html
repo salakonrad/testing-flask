@@ -13,8 +13,8 @@
 
   <body>
     <nav class="navbar navbar-expand-md navbar-light bg-light">
-        {% if button_logout %}
-        <a class="navbar-brand" href="{{ url_for('index')}}">HRMilox</a>
+        {% if is_logged %}
+        <a class="navbar-brand" href="{{ url_for('home')}}">HRMilox</a>
         {% else %}
         <a class="navbar-brand" href="{{ url_for('index')}}">HRMilox</a>
         {% endif %}
@@ -26,9 +26,9 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ url_for('about')}}">About</a>
                 </li>
-                {% if button_logout %}
+                {% if is_logged %}
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ url_for('index')}}">Log out</a>
+                    <a class="nav-link" href="{{ url_for('logout')}}">Log out</a>
                 </li>
                 {% else %}
                 <li class="nav-item active">

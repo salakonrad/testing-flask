@@ -2,7 +2,9 @@
 
 {% block content %}
     <h1>{% block title %} Zalogowano! {% endblock %}</h1>
-
+    {% if display_user %}
+    Witaj {{ display_user }}
+    {% endif %}
     {% for post in posts %}
     <a href="{{ url_for('post', post_id=post['id']) }}">
         <h2>{{ post['title'] }}</h2>
