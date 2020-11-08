@@ -63,7 +63,7 @@ def signup_post():
     password = request.form.get('password')
 
     if email == "milox@milox" and password == "milox":
-        return redirect(url_for('home'))
+        return redirect(url_for('index'))
     else:
         flash('Please check your login details and try again.')
         return redirect(url_for('signup'))
